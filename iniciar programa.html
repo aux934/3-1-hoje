@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-1-HOJE | Dashboard de Organização</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <h1>3–1–HOJE</h1>
+            <p class="tagline">Clareza > Produtividade</p>
+            <div class="badges-container">
+                <div id="efficiency-badge" class="efficiency-badge">Eficiência Semanal: 0%</div>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- 1. LISTA MESTRE -->
+            <section class="card block-mestre">
+                <h2>1. Lista Mestre</h2>
+                <div class="input-group-vertical">
+                    <input type="text" id="mestre-input" placeholder="O que está na sua cabeça?">
+                    <div class="input-row">
+                        <select id="mestre-category">
+                            <option value="Trabalho">Trabalho</option>
+                            <option value="Joias">Joias</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                        <input type="text" id="mestre-time" placeholder="Tempo min (ex: 25m)" style="width: 120px;">
+                        <button id="add-mestre-btn">Adicionar</button>
+                    </div>
+                </div>
+                <div class="list-container" id="mestre-list">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </section>
+
+            <!-- 3. PLANEJAMENTO SEMANAL -->
+            <section class="card block-weekly">
+                <div class="header-with-action">
+                    <div>
+                        <h2>3. Planejamento Semanal</h2>
+                        <span class="efficiency-badge" style="background: var(--primary); font-size: 0.75rem;">Máx: 5
+                            tarefas</span>
+                    </div>
+                    <button class="small-btn secondary" onclick="clearWeeklyCompleted()"
+                        title="Excluir tarefas concluídas da semana permanentemente">Limpar Concluídas</button>
+                </div>
+
+                <div class="week-period-selector" style="margin-top: 10px;">
+                    <label>Período:</label>
+                    <input type="date" id="week-start" title="Início da semana">
+                    <span>até</span>
+                    <input type="date" id="week-end" title="Fim da semana">
+                </div>
+
+                <p class="limit-msg" style="margin-top: 10px;">Escolha até 5 tarefas para focar esta semana</p>
+                <div class="weekly-list" id="weekly-list">
+                    <!-- Tasks from Master List will be selectable/shown here -->
+                </div>
+            </section>
+
+            <!-- 2. FOCO DO DIA -->
+            <section class="card daily-focus">
+                <div class="header-with-action">
+                    <h2>2. Foco do Dia</h2>
+                    <button class="small-btn secondary" onclick="resetDailyFocus()"
+                        title="Limpar tarefas concluídas do foco">Limpar Concluídas</button>
+                </div>
+
+                <div class="focus-essential">
+                    <div class="field-label">🔥 Tarefa Principal (25 min)</div>
+                    <p class="guide-question">“Se eu só fizer isso hoje, o dia já valeu?”</p>
+                    <div class="focus-main-input-wrapper">
+                        <select id="daily-main-task" class="task-select">
+                            <option value="">Selecione a tarefa principal...</option>
+                        </select>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" id="main-task-check">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <div id="main-task-meta" class="task-meta"></div>
+                    <div class="anti-cell-reminder">
+                        📱 Celular fora da mesa durante os 25 min
+                    </div>
+                </div>
+
+                <div class="focus-secondary">
+                    <div class="field-label">📋 Tarefas Secundárias (Máx. 3)</div>
+                    <div id="daily-secondary-list" class="secondary-inputs">
+                        <!-- Up to 3 selections with checkboxes -->
+                    </div>
+                    <datalist id="weekly-options"></datalist>
+                </div>
+
+                <div id="failure-reason-container" class="failure-area hidden">
+                    <div class="field-label">Por que a tarefa principal não foi feita?</div>
+                    <textarea id="failure-reason" placeholder="Ex: Fiquei no celular, cansaço mental..."></textarea>
+                </div>
+            </section>
+
+            <!-- 2. RASTREADOR DE HÁBITOS (MOVIDO PARA FINAL) -->
+            <section class="card block-habits">
+                <div class="header-with-action">
+                    <h2>Hábitos (Mensal)</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="small-btn secondary" onclick="clearHabitData()"
+                            title="Limpar todo o registro de um hábito específico">Limpar Registro</button>
+                        <button class="small-btn" id="manage-habits-btn">Gerenciar</button>
+                    </div>
+                </div>
+
+                <div id="habit-management-ui" class="hidden habit-mgmt">
+                    <div class="input-group">
+                        <input type="text" id="new-habit-name" placeholder="Nome do hábito (máx 5)">
+                        <button id="add-habit-btn">+</button>
+                    </div>
+                </div>
+
+                <!-- Quadro de Eficiência de Hábitos -->
+                <div id="habit-stats-board" class="habit-stats-board"></div>
+
+                <div class="habits-header">
+                    <div class="habit-col-name">Hábito</div>
+                    <div class="habit-days-grid" id="days-header">
+                        <!-- Days 1-31 will be injected here -->
+                    </div>
+                </div>
+                <div id="habits-list">
+                    <!-- Habits rows will be injected here -->
+                </div>
+            </section>
+        </main>
+
+        <footer class="app-footer">
+            <div class="portability-tools">
+                <h3>💾 Portabilidade (Pendrive)</h3>
+                <p>Salve seus dados antes de sair ou carregue-os em outro computador.</p>
+                <div class="portability-buttons">
+                    <button id="export-btn" class="secondary-btn">Exportar Dados (Backup)</button>
+                    <label for="import-input" class="custom-file-upload">
+                        Importar Dados (Restaurar)
+                    </label>
+                    <input type="file" id="import-input" accept=".json" style="display:none;">
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
